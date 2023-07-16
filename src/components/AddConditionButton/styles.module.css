@@ -1,0 +1,13 @@
+.addButton {
+  padding: 8px;
+  user-select: none;
+  cursor: pointer;
+}
+
+.condition {
+  background-color: darkgreen;
+  color: white;
+  font-weight: bold;
+  padding: 2px 4px;
+  border-radius: 6px;
+}

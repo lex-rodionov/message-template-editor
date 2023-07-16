@@ -1,0 +1,14 @@
+.input {
+  flex-grow: 1;
+  padding: 8px;
+  padding-bottom: 0;
+  border: 1px solid gray;
+  border-radius: 6px;
+  outline: none;
+  resize: none;
+  overflow: hidden;
+}
+
+.input:focus, .input:active {
+  border-color: blue;
+}

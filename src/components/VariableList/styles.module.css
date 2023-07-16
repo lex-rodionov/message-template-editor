@@ -1,0 +1,12 @@
+.clickableItem {
+  background-color: lime;
+  border: 1px solid gray;
+  border-radius: 4px;
+  cursor: pointer;
+  font-style: italic;
+  padding: 4px 2px;
+}
+
+.space {
+  padding-right: 6px;
+}
