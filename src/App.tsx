@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import MessageEditor from 'pages/MessageEditor';
 import StartPage from 'pages/StartPage';
+import { EditorProvider } from 'hooks/useEditorContext';
 
 function App() {
   const [showMessageEditor, setShowMessageEditor] = useState(false);
@@ -9,7 +10,6 @@ function App() {
     setShowMessageEditor(true);
   }
   const handleSaveTemplate = async (template: string) => {
-    console.log('handleSaveTemplate: ');
     console.log(template);
   }
 
@@ -42,11 +42,13 @@ jakelennard911@gmail.com`,
   return (
     <>
       {showMessageEditor ? (
-        <MessageEditor
-          template={template}
-          arrVarNames={arrVarNames}
-          callbackSave={handleSaveTemplate}
-        />
+        <EditorProvider>
+          <MessageEditor
+            // tempt={template}
+            arrVarNames={arrVarNames}
+            callbackSave={handleSaveTemplate}
+          />
+        </EditorProvider>
       ) : (
         <StartPage onClick={handleShowMessageEditor} />
       )}

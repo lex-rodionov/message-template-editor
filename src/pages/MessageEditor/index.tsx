@@ -1,14 +1,15 @@
-import { useState } from 'react';
-import { TemplateCondition } from 'types';
 import EditorTemplateCondition from 'components/TemplateCondition';
 import VariableList from 'components/VariableList';
 import AddConditionButton from 'components/AddConditionButton';
 import TextArea from 'components/TextArea';
 import CustomButton from 'components/CustomButton';
+import useEditorContext from 'hooks/useEditorContext';
+import { ROOT_PARENT_ID } from 'constants/index';
+import { TemplateCondition, TemplateItemType } from 'types';
 import s from './styles.module.css';
 
-
-type MessageTemplate = {
+// TODO: Replace this type
+type MessageTemplate1 = {
   header?: string;
   body: TemplateCondition;
   footer?: string;
@@ -16,46 +17,36 @@ type MessageTemplate = {
 
 type Props = {
   arrVarNames: string[];
-  template?: MessageTemplate;
+  tempt?: MessageTemplate1;
   callbackSave: (template: string) => Promise<void>;
 }
 
-const defaultTemplate: MessageTemplate = {
-  header: '',
-  body: {
-    if: '',
-    then: { startText: '' },
-    else: { startText: '' }
-  },
-  footer: '',
-}
-
-
 export default function MessageEditor({
   arrVarNames,
-  template,
+  tempt,
   callbackSave,
 }: Props) {
-  const [messageTemplate, setMessageTemplate] = useState(template ?? defaultTemplate);
-  const handleChangeHeader = (value: string) => {
-    setMessageTemplate((old) => ({
-      ...old,
-      header: value,
-    }));
-  }
-  const handleChangeFooter = (value: string) => {
-    setMessageTemplate((old) => ({
-      ...old,
-      footer: value,
-    }));
-  }
-  const handleClickVariable = (name: string) => {
-    console.log(name);
+  const {
+    template,
+    changeHeader,
+    changeFooter,
+    addCondition,
+    addVariable,
+    setFocus,
+  } = useEditorContext();
+
+  const handleSetFocus = (input: HTMLTextAreaElement) => {
+    setFocus({
+      element: input,
+      conditionItemId: '',
+    });
   }
   const handleClickAddCondition = () => {
-    console.log('Click Add Condition');
+    addCondition();
   }
   const handleSaveTemplate = async () => {
+    console.log('MessageTemplate');
+    console.log(template);
     await callbackSave('');
   }
 
@@ -66,7 +57,7 @@ export default function MessageEditor({
       </div>
 
       <div className={s.variableListContainer}>
-        <VariableList variables={arrVarNames} onClick={handleClickVariable} />
+        <VariableList variables={arrVarNames} onClick={addVariable} />
       </div>
       
 
@@ -76,19 +67,26 @@ export default function MessageEditor({
 
       <div className={s.inputContainer}>
         <TextArea
-          value={messageTemplate.header}
-          onChange={handleChangeHeader}
+          value={template.header}
+          onChange={changeHeader}
+          setFocusedElement={handleSetFocus}
+          data-type={TemplateItemType.HEADER}
         />
       </div>
 
-      {!!messageTemplate.body && (
-        <EditorTemplateCondition condition={messageTemplate.body} />
+      {!!template.body && (
+        <EditorTemplateCondition
+          parentId={ROOT_PARENT_ID}
+          condition={template.body}
+        />
       )}
 
       <div className={s.inputContainer}>
         <TextArea
-          value={messageTemplate.footer}
-          onChange={handleChangeFooter}
+          value={template.footer}
+          onChange={changeFooter}
+          setFocusedElement={handleSetFocus}
+          data-type={TemplateItemType.FOOTER}
         />
       </div>
 
