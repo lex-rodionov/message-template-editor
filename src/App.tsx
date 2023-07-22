@@ -1,42 +1,51 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import MessageEditor from 'pages/MessageEditor';
 import StartPage from 'pages/StartPage';
 import { EditorProvider } from 'hooks/useEditorContext';
+import { getMessageTemplate, getVariables, setMessageTemplate } from 'services/storage';
+import { MessageTemplate } from 'types';
 
-function App() {
-  const [showMessageEditor, setShowMessageEditor] = useState(false);
 
-  const handleShowMessageEditor = () => {
-    setShowMessageEditor(true);
-  }
-  const handleSaveTemplate = async (template: string) => {
-    console.log(template);
-  }
-
-  const arrVarNames = ['firstname', 'lastname', 'company', 'position'];
-
-  const template = {
-    header: `Hello {firstname}!
+const template = {
+  header: `Hello {firstname}!
 
 I just went through your profile and I would love to join your network!`,
-    body: {
-      if: '{company}',
-      then: {
-        startText: 'I know you work at {company}',
-        condition: {
-          if: '{position}',
-          then: { startText: 'as {position}' },
-          else: { startText: ', but what is your role?' },
-        },
-        endText: ':)',
+  body: {
+    if: '{company}',
+    then: {
+      startText: 'I know you work at {company}',
+      condition: {
+        if: '{position}',
+        then: { startText: 'as {position}' },
+        else: { startText: ', but what is your role?' },
       },
-      else: { startText: 'Where do you work at the moment?' }
+      endText: ':)',
     },
-    footer: `
+    else: { startText: 'Where do you work at the moment?' }
+  },
+  footer: `
 
 Jake
 Software Developer
 jakelennard911@gmail.com`,
+}
+
+
+function App() {
+  const [showMessageEditor, setShowMessageEditor] = useState(false);
+  const [variables, setVariables] = useState<string[]>([]);
+  const [template, setTemplate] = useState<MessageTemplate | null>(null);
+
+  useEffect(() => {
+    setVariables(getVariables());
+    setTemplate(getMessageTemplate());
+  }, []);
+
+  const handleShowMessageEditor = () => {
+    setShowMessageEditor(true);
+  }
+  const handleSaveTemplate = async (value: MessageTemplate) => {
+    setMessageTemplate(value);
   }
 
   return (
@@ -44,8 +53,8 @@ jakelennard911@gmail.com`,
       {showMessageEditor ? (
         <EditorProvider>
           <MessageEditor
-            // tempt={template}
-            arrVarNames={arrVarNames}
+            template={template}
+            arrVarNames={variables}
             callbackSave={handleSaveTemplate}
           />
         </EditorProvider>

@@ -16,6 +16,7 @@ import {
 } from 'utils/templateEditor';
 
 
+const SET_TEMPLATE = 'SET_TEMPLATE';
 const CHANGE_HEADER = 'CHANGE_HEADER';
 const CHANGE_FOOTER = 'CHANGE_FOOTER';
 const CHANGE_CONDITION_TEXT = 'CHANGE_CONDITION_TEXT';
@@ -38,14 +39,20 @@ type TemplateAction = {
   payload?: unknown;
 }
 
-export default function useTemplate(initialTemplate?: MessageTemplate) {
+export default function useTemplate() {
   const [template, dispatch] = useReducer(
     templateReducer,
-    initialTemplate ?? defaultTemplate
+    defaultTemplate
   );
 
   return {
     template,
+    setTemplate: (template: MessageTemplate) => {
+      dispatch({
+        type: SET_TEMPLATE,
+        payload: template,
+      });
+    },
     changeHeader: (value: string) => {
       dispatch({
         type: CHANGE_HEADER,
@@ -103,6 +110,9 @@ export type UseTemplateResult = ReturnType<typeof useTemplate>;
 
 function templateReducer(state: MessageTemplate, action: TemplateAction): MessageTemplate {
   switch(action.type) {
+    case SET_TEMPLATE: {
+      return action.payload as MessageTemplate;
+    }
     case CHANGE_HEADER: {
       return {
         ...state,

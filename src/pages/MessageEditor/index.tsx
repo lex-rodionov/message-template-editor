@@ -1,3 +1,4 @@
+import { useEffect } from 'react';
 import EditorTemplateCondition from 'components/TemplateCondition';
 import VariableList from 'components/VariableList';
 import AddConditionButton from 'components/AddConditionButton';
@@ -5,35 +6,36 @@ import TextArea from 'components/TextArea';
 import CustomButton from 'components/CustomButton';
 import useEditorContext from 'hooks/useEditorContext';
 import { ROOT_PARENT_ID } from 'constants/index';
-import { TemplateCondition, TemplateItemType } from 'types';
+import { MessageTemplate, TemplateItemType } from 'types';
 import s from './styles.module.css';
 
-// TODO: Replace this type
-type MessageTemplate1 = {
-  header?: string;
-  body: TemplateCondition;
-  footer?: string;
-}
 
 type Props = {
   arrVarNames: string[];
-  tempt?: MessageTemplate1;
-  callbackSave: (template: string) => Promise<void>;
+  template?: MessageTemplate | null;
+  callbackSave: (template: MessageTemplate) => Promise<void>;
 }
 
 export default function MessageEditor({
   arrVarNames,
-  tempt,
+  template,
   callbackSave,
 }: Props) {
   const {
-    template,
+    template: currentTemplate,
+    setTemplate,
     changeHeader,
     changeFooter,
     addCondition,
     addVariable,
     setFocus,
   } = useEditorContext();
+
+  useEffect(() => {
+    if (template) {
+      setTemplate(template);
+    }
+  }, [template]);
 
   const handleSetFocus = (input: HTMLTextAreaElement) => {
     setFocus({
@@ -46,8 +48,8 @@ export default function MessageEditor({
   }
   const handleSaveTemplate = async () => {
     console.log('MessageTemplate');
-    console.log(template);
-    await callbackSave('');
+    console.log(currentTemplate);
+    await callbackSave(currentTemplate);
   }
 
   return (
@@ -67,23 +69,23 @@ export default function MessageEditor({
 
       <div className={s.inputContainer}>
         <TextArea
-          value={template.header}
+          value={currentTemplate.header}
           onChange={changeHeader}
           setFocusedElement={handleSetFocus}
           data-type={TemplateItemType.HEADER}
         />
       </div>
 
-      {!!template.body && (
+      {!!currentTemplate.body && (
         <EditorTemplateCondition
           parentId={ROOT_PARENT_ID}
-          condition={template.body}
+          condition={currentTemplate.body}
         />
       )}
 
       <div className={s.inputContainer}>
         <TextArea
-          value={template.footer}
+          value={currentTemplate.footer}
           onChange={changeFooter}
           setFocusedElement={handleSetFocus}
           data-type={TemplateItemType.FOOTER}
