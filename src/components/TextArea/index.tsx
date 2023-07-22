@@ -5,7 +5,7 @@ import s from './styles.module.css';
 
 type Props = {
   value?: string;
-  onChange: (value: string) => void;
+  onChange?: (value: string) => void;
   setFocusedElement?: (value: HTMLTextAreaElement) => void;
   [TYPE_ATTRIBUTE_NAME]?: string;
   disabled?: boolean;
@@ -28,7 +28,9 @@ export default function TextArea({
   }, [textAreaRef, value]);
 
   const handleChange = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
-    onChange(event.target.value);
+    if (onChange) {
+      onChange(event.target.value);
+    }
   }
 
   const onFocus = (event: React.FocusEvent<HTMLTextAreaElement>) => {
