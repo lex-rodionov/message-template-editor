@@ -7,7 +7,8 @@ type Props = {
   value?: string;
   onChange: (value: string) => void;
   setFocusedElement?: (value: HTMLTextAreaElement) => void;
-  [TYPE_ATTRIBUTE_NAME]: string;
+  [TYPE_ATTRIBUTE_NAME]?: string;
+  disabled?: boolean;
 }
 
 export default function TextArea({

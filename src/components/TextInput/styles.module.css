@@ -1,0 +1,25 @@
+.container {
+  position: relative;
+  border: 1px solid gray;
+  border-radius: 6px;
+  overflow: hidden;
+}
+
+.activeContainer {
+  border-color: blue;
+}
+
+.label {
+  position: absolute;
+  left: 4px;
+  top: 2px;
+  font-size: 11px;
+  color: gray;
+}
+
+.input {
+  padding: 0;
+  border: 0;
+  outline: none;
+  padding: 16px 8px 4px 14px;
+}

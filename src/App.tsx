@@ -39,7 +39,7 @@ function App() {
   useEffect(() => {
     setVariables(getVariables());
     setTemplate(getMessageTemplate());
-  }, []);
+  }, [showMessageEditor]);
 
   const handleShowMessageEditor = () => {
     setShowMessageEditor(true);
