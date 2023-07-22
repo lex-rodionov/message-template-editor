@@ -1,4 +1,5 @@
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
+import MessagePreview from 'pages/MessagePreview';
 import EditorTemplateCondition from 'components/TemplateCondition';
 import VariableList from 'components/VariableList';
 import AddConditionButton from 'components/AddConditionButton';
@@ -14,13 +15,17 @@ type Props = {
   arrVarNames: string[];
   template?: MessageTemplate | null;
   callbackSave: (template: MessageTemplate) => Promise<void>;
+  closeEditor: () => void;
 }
 
 export default function MessageEditor({
   arrVarNames,
   template,
   callbackSave,
+  closeEditor,
 }: Props) {
+  const [showPreview, setShowPreview] = useState(false);
+
   const {
     template: currentTemplate,
     setTemplate,
@@ -43,13 +48,14 @@ export default function MessageEditor({
       conditionItemId: '',
     });
   }
-  const handleClickAddCondition = () => {
-    addCondition();
-  }
   const handleSaveTemplate = async () => {
-    console.log('MessageTemplate');
-    console.log(currentTemplate);
     await callbackSave(currentTemplate);
+  }
+  const handleOpenPreview = () => {
+    setShowPreview(true);
+  }
+  const handleClosePreview = () => {
+    setShowPreview(false);
   }
 
   return (
@@ -61,10 +67,9 @@ export default function MessageEditor({
       <div className={s.variableListContainer}>
         <VariableList variables={arrVarNames} onClick={addVariable} />
       </div>
-      
 
       <div className={s.conditionButtonContainer}>
-        <AddConditionButton onClick={handleClickAddCondition} />
+        <AddConditionButton onClick={addCondition} />
       </div>
 
       <div className={s.inputContainer}>
@@ -93,12 +98,20 @@ export default function MessageEditor({
       </div>
 
       <div className={s.controlButtons}>
-        <CustomButton text='Preview' onClick={() => console.log('PREVIEW')} />
+        <CustomButton text='Preview' onClick={handleOpenPreview} />
         <div className={s.buttonSpace} />
         <CustomButton text='Save' onClick={handleSaveTemplate} />
         <div className={s.buttonSpace} />
-        <CustomButton text='Close' onClick={() => console.log('CLOSE')} />
+        <CustomButton text='Close' onClick={closeEditor} />
       </div>
+
+      {showPreview && (
+        <MessagePreview
+          template={currentTemplate}
+          arrVarNames={arrVarNames}
+          onClose={handleClosePreview}
+        />
+      )}
     </div>
   );
 }

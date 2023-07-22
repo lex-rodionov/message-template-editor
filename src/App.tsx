@@ -44,6 +44,9 @@ function App() {
   const handleShowMessageEditor = () => {
     setShowMessageEditor(true);
   }
+  const handleCloseMessageEditor = () => {
+    setShowMessageEditor(false);
+  }
   const handleSaveTemplate = async (value: MessageTemplate) => {
     setMessageTemplate(value);
   }
@@ -56,6 +59,7 @@ function App() {
             template={template}
             arrVarNames={variables}
             callbackSave={handleSaveTemplate}
+            closeEditor={handleCloseMessageEditor}
           />
         </EditorProvider>
       ) : (

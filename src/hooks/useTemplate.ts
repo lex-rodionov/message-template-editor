@@ -288,6 +288,11 @@ function templateReducer(state: MessageTemplate, action: TemplateAction): Messag
             };
           }
         }
+      } else {
+        return {
+          ...state,
+          header: `{${variableName}}${state.header}`,
+        }
       }
 
       return state;
