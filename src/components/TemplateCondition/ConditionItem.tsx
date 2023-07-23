@@ -11,7 +11,7 @@ type Props = {
   conditionId: string;
 }
 
-export default function ConditionItem1({
+export default function ConditionItem({
   label,
   conditionId,
 }: Props) {
