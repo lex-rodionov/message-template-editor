@@ -22,7 +22,7 @@ class MessageGenerator {
 
     const headerText = this.replaceVariables(startText);
     if (headerText) {
-      message += headerText + '\n';
+      message += headerText;
     }
 
     if (rootCondition) {
@@ -56,14 +56,12 @@ class MessageGenerator {
   private replaceVariables(text?: string) {
     if (!text) return '';
 
-    let result = text;
-    const keys = this.keys.join('|');
+    return text.replace(/\{(\w+)\}/g, (original, searchValue) => {
+      if (!this.keys.includes(searchValue)) return original;
 
-    for (const key of this.keys) {
-      result = result.replaceAll(`{${key}}`, this.values[key] ?? '');
-    }
-
-    return result;
+      return this.values.hasOwnProperty(searchValue)
+          ? this.values[searchValue] : original;
+  });
   }
 
   private parseConditionItem(itemId: string) {

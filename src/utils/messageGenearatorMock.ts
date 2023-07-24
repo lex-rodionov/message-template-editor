@@ -68,10 +68,16 @@ export const mockVariables = {
   'position': 'Co-chair'
 };
 
+export const mockEmptyVariables = {
+  'firstname': '',
+  'lastname': '',
+  'company': '',
+  'position': ''
+};
+
 export const mockAllVariablesResult = `Hello Bill!
 
-I just went through your profile and I would love to join your network!
-I know you work at Gates Corp as Co-chair. :)
+I just went through your profile and I would love to join your network!I know you work at Gates Corp as Co-chair. :)
 
 Jake
 Software Developer
@@ -79,8 +85,7 @@ jakelennard911@gmail.com`;
 
 export const mockVariablesWithoutPositionResult = `Hello Bill!
 
-I just went through your profile and I would love to join your network!
-I know you work at Gates Corp, but what is your role?:)
+I just went through your profile and I would love to join your network!I know you work at Gates Corp, but what is your role?:)
 
 Jake
 Software Developer
@@ -88,8 +93,7 @@ jakelennard911@gmail.com`;
 
 export const mockOnlyNameVariablesResult = `Hello Bill!
 
-I just went through your profile and I would love to join your network!
-Where do you work at the moment?
+I just went through your profile and I would love to join your network!Where do you work at the moment?
 
 Jake
 Software Developer
@@ -97,8 +101,7 @@ jakelennard911@gmail.com`;
 
 export const mockNoVariablesResult = `Hello !
 
-I just went through your profile and I would love to join your network!
-Where do you work at the moment?
+I just went through your profile and I would love to join your network!Where do you work at the moment?
 
 Jake
 Software Developer

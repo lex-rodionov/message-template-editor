@@ -7,6 +7,7 @@ import {
   mockVariablesWithoutPositionResult,
   mockOnlyNameVariablesResult,
   mockNoVariablesResult,
+  mockEmptyVariables,
 } from './messageGenearatorMock';
 
 
@@ -17,37 +18,32 @@ test('All variables have values', () => {
 });
 
 test('All variables except {position} have values', () => {
-  const {
-    position,
-    ...variablesWithoutPosition
-  } = mockVariables;
-
-  const result = generateMessage(mockTemplate, variablesWithoutPosition);
+  const result = generateMessage(mockTemplate, {
+    ...mockVariables,
+    position: '',
+  });
 
   expect(result).toBe(mockVariablesWithoutPositionResult);
 });
 
 test('Only {firstname} and {lastname} variables have values', () => {
-  const { firstname, lastname } = mockVariables;
-
   const result = generateMessage(mockTemplate, {
-    firstname,
-    lastname,
+    ...mockVariables,
+    company: '',
+    position: '',
   });
 
   expect(result).toBe(mockOnlyNameVariablesResult);
 });
 
 test('Do not have variables', () => {
-  const result = generateMessage(mockTemplate, {});
+  const result = generateMessage(mockTemplate, mockEmptyVariables);
 
   expect(result).toBe(mockNoVariablesResult);
 });
 
 test('Empty template', () => {
   const result = generateMessage(mockEmptyTemplate, mockVariables);
-
-  console.log({result});
 
   expect(result).toBe('');
 });
