@@ -25,9 +25,7 @@ export type SelectedInput = {
 }
 
 export type MessageTemplate = {
-  header: string;
-  body: TemplateCondition | null;
-  footer: string;
+  body: ConditionItem;
   conditionList: ConditionItem[];
   selectedInput: SelectedInput | null;
 }

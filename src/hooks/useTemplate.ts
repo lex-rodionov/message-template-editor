@@ -1,4 +1,5 @@
 import { useReducer } from 'react';
+import { v4 as uuidv4 } from 'uuid';
 import { ROOT_PARENT_ID, TYPE_ATTRIBUTE_NAME } from 'constants/index';
 import {
   MessageTemplate,
@@ -27,9 +28,11 @@ const DELETE_CONDITION = 'DELETE_CONDITION';
 const ADD_VARIABLE = 'ADD_VARIABLE';
 
 export const defaultTemplate: MessageTemplate = {
-  header: '',
-  body: null,
-  footer: '',
+  body: {
+    id: uuidv4(),
+    startText: '',
+    condition: null,
+  },
   conditionList: [],
   selectedInput: null,
 }
@@ -116,13 +119,19 @@ function templateReducer(state: MessageTemplate, action: TemplateAction): Messag
     case CHANGE_HEADER: {
       return {
         ...state,
-        header: action.payload as string,
+        body: {
+          ...state.body,
+          startText: action.payload as string,
+        },
       };
     }
     case CHANGE_FOOTER: {
       return {
         ...state,
-        footer: action.payload as string,
+        body: {
+          ...state.body,
+          endText: action.payload as string,
+        }
       };
     }
     case CHANGE_CONDITION_TEXT: {
@@ -161,10 +170,16 @@ function templateReducer(state: MessageTemplate, action: TemplateAction): Messag
       const { conditionItemId, element } = state.selectedInput ?? {};
       const { condition, conditionItems } = createNewCondition();
 
-      if (!state.body) {
+      if (!state.body.condition) {
+        const textFields = element ? splitInputText(element) : { endText: '' };
+
         return {
           ...state,
-          body: condition,
+          body: {
+            ...state.body,
+            ...textFields,
+            condition,
+          },
           conditionList: [
             ...state.conditionList,
             ...conditionItems,
@@ -205,9 +220,18 @@ function templateReducer(state: MessageTemplate, action: TemplateAction): Messag
       const parentId = action.payload as string;
 
       if (parentId === ROOT_PARENT_ID) {
+        let startText = state.body.startText;
+        if (state.body.endText) {
+          startText += state.body.endText;
+        }
         return {
           ...state,
-          body: null,
+          body: {
+            ...state.body,
+            startText,
+            endText: undefined,
+            condition: null,
+          },
           conditionList: [],
           selectedInput: null,
         }
@@ -249,13 +273,19 @@ function templateReducer(state: MessageTemplate, action: TemplateAction): Messag
           case TemplateItemType.HEADER: {
             return {
               ...state,
-              header: resultText,
+              body: {
+                ...state.body,
+                startText: resultText,
+              }
             };
           }
           case TemplateItemType.FOOTER: {
             return {
               ...state,
-              footer: resultText,
+              body: {
+                ...state.body,
+                endText: resultText,
+              }
             };
           }
           case TemplateItemType.IF:
@@ -291,7 +321,10 @@ function templateReducer(state: MessageTemplate, action: TemplateAction): Messag
       } else {
         return {
           ...state,
-          header: `{${variableName}}${state.header}`,
+          body: {
+            ...state.body,
+            startText: `{${variableName}}${state.body.startText}`,
+          }
         }
       }
 

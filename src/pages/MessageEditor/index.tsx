@@ -74,28 +74,30 @@ export default function MessageEditor({
 
       <div className={s.inputContainer}>
         <TextArea
-          value={currentTemplate.header}
+          value={currentTemplate.body.startText}
           onChange={changeHeader}
           setFocusedElement={handleSetFocus}
           data-type={TemplateItemType.HEADER}
         />
       </div>
 
-      {!!currentTemplate.body && (
+      {!!currentTemplate.body.condition && (
         <EditorTemplateCondition
           parentId={ROOT_PARENT_ID}
-          condition={currentTemplate.body}
+          condition={currentTemplate.body.condition}
         />
       )}
 
-      <div className={s.inputContainer}>
-        <TextArea
-          value={currentTemplate.footer}
-          onChange={changeFooter}
-          setFocusedElement={handleSetFocus}
-          data-type={TemplateItemType.FOOTER}
-        />
-      </div>
+      {currentTemplate.body.endText !== undefined && (
+        <div className={s.inputContainer}>
+          <TextArea
+            value={currentTemplate.body.endText}
+            onChange={changeFooter}
+            setFocusedElement={handleSetFocus}
+            data-type={TemplateItemType.FOOTER}
+          />
+        </div>
+      )}
 
       <div className={s.controlButtons}>
         <CustomButton text='Preview' onClick={handleOpenPreview} />

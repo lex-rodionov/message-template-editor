@@ -1,21 +1,26 @@
 import { MessageTemplate } from 'types';
 
 export const mockEmptyTemplate: MessageTemplate = {
-  'header': '',
-  'body': null,
-  'footer': '',
+  'body': {
+    'id': '68ed75ef-41c3-43dd-a3c3-fd1dff80678e',
+    'startText': '',
+    'condition': null,
+  },
   'conditionList': [],
   'selectedInput': null
 }
 
 export const mockTemplate: MessageTemplate = {
-  'header': 'Hello {firstname}!\n\nI just went through your profile and I would love to join your network!',
   'body': {
-      'ifId': '6f89cdba-343c-4edf-9f66-50b18deca8a8',
-      'thenId': '600a2df9-31e7-421e-8a90-0ce50fc7b0bc',
-      'elseId': '68ed75ef-41c3-43dd-a3c3-fd1dff80655e'
+    'id': '68ed75ef-41c3-43dd-a3c3-fd1dff80678e',
+    'startText': 'Hello {firstname}!\n\nI just went through your profile and I would love to join your network!',
+    'endText': '\n\nJake\nSoftware Developer\njakelennard911@gmail.com',
+    'condition': {
+        'ifId': '6f89cdba-343c-4edf-9f66-50b18deca8a8',
+        'thenId': '600a2df9-31e7-421e-8a90-0ce50fc7b0bc',
+        'elseId': '68ed75ef-41c3-43dd-a3c3-fd1dff80655e'
+    }
   },
-  'footer': '\n\nJake\nSoftware Developer\njakelennard911@gmail.com',
   'conditionList': [
       {
           'id': '6f89cdba-343c-4edf-9f66-50b18deca8a8',

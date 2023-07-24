@@ -1,24 +1,35 @@
+import { getVariables } from 'services/storage';
 import { MessageTemplate, TemplateCondition } from 'types';
 
 class MessageGenerator {
+  private keys: string[] = [];
+
   constructor(
     private template: MessageTemplate,
     private values: { [name: string]: string},
-  ) {}
+  ) {
+    this.keys = getVariables();
+  }
 
   public generate() {
     let message = '';
 
-    const headerText = this.replaceVariables(this.template.header);
+    const {
+      startText,
+      endText,
+      condition: rootCondition,
+    } = this.template.body;
+
+    const headerText = this.replaceVariables(startText);
     if (headerText) {
       message += headerText + '\n';
     }
 
-    if (this.template.body) {
-      message += this.parseCondition(this.template.body);
+    if (rootCondition) {
+      message += this.parseCondition(rootCondition);
     }
 
-    const footerText = this.replaceVariables(this.template.footer);
+    const footerText = this.replaceVariables(endText);
     if (footerText) {
       message += footerText;
     }
@@ -46,13 +57,10 @@ class MessageGenerator {
     if (!text) return '';
 
     let result = text;
-    const matches = result.match(/\{\w+\}/giu);
+    const keys = this.keys.join('|');
 
-    if (matches) {
-      for (const match of matches) {
-        const replaceValue = this.values[match.slice(1, -1)];
-        result = result.replace(match, replaceValue ?? '');
-      }
+    for (const key of this.keys) {
+      result = result.replaceAll(`{${key}}`, this.values[key] ?? '');
     }
 
     return result;

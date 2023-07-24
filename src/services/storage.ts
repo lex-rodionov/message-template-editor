@@ -2,7 +2,7 @@ import { DEFAULT_VAR_NAMES } from 'constants/index';
 import { MessageTemplate } from 'types';
 
 const TEMPLATE = 'app_template';
-const VARIABLE_NAMES = 'app_variable_names';
+const VARIABLE_NAMES = 'arrVarNames';
 
 export function setMessageTemplate(value: MessageTemplate) {
   value.selectedInput = null;
