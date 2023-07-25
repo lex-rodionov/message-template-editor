@@ -8,16 +8,19 @@ import s from './styles.module.css';
 type Props = {
   parentId: string;
   condition: TemplateCondition;
+  isRoot?: boolean;
 }
 
 export default function EditorTemplateCondition({
   parentId,
   condition,
+  isRoot,
 }: Props) {
   const {
     changeConditionText,
     getConditionItem,
     deleteCondition,
+    deleteBodyCondition,
     setFocus,
   } = useEditorContext();
   
@@ -38,7 +41,11 @@ export default function EditorTemplateCondition({
     });
   };
   const handleDeleteCondition = () => {
-    deleteCondition(parentId);
+    if (isRoot) {
+      deleteBodyCondition(parentId);
+    } else {
+      deleteCondition(parentId);
+    }
   }
 
   return (

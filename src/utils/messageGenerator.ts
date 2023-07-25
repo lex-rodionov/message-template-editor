@@ -1,5 +1,5 @@
 import { getVariables } from 'services/storage';
-import { MessageTemplate, TemplateCondition } from 'types';
+import { MessageBodyType, MessageCondition, MessageTemplate, MessageText, TemplateCondition } from 'types';
 
 class MessageGenerator {
   private keys: string[] = [];
@@ -14,24 +14,14 @@ class MessageGenerator {
   public generate() {
     let message = '';
 
-    const {
-      startText,
-      endText,
-      condition: rootCondition,
-    } = this.template.body;
-
-    const headerText = this.replaceVariables(startText);
-    if (headerText) {
-      message += headerText;
-    }
-
-    if (rootCondition) {
-      message += this.parseCondition(rootCondition);
-    }
-
-    const footerText = this.replaceVariables(endText);
-    if (footerText) {
-      message += footerText;
+    for (const item of this.template.body) {
+      if (item.type === MessageBodyType.TEXT) {
+        const replacedText = this.replaceVariables((item as MessageText).text);
+        message += replacedText;
+      }
+      if (item.type === MessageBodyType.CONDITION) {
+        message += this.parseCondition((item as MessageCondition).condition);
+      }
     }
 
     return message;
@@ -57,8 +47,6 @@ class MessageGenerator {
     if (!text) return '';
 
     return text.replace(/\{(\w+)\}/g, (original, searchValue) => {
-      if (!this.keys.includes(searchValue)) return original;
-
       return this.values.hasOwnProperty(searchValue)
           ? this.values[searchValue] : original;
   });

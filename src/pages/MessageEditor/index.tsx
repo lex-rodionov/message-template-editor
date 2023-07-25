@@ -6,8 +6,13 @@ import AddConditionButton from 'components/AddConditionButton';
 import TextArea from 'components/TextArea';
 import CustomButton from 'components/CustomButton';
 import useEditorContext from 'hooks/useEditorContext';
-import { ROOT_PARENT_ID } from 'constants/index';
-import { MessageTemplate, TemplateItemType } from 'types';
+import {
+  MessageBodyType,
+  MessageCondition,
+  MessageTemplate,
+  MessageText,
+  TemplateItemType,
+} from 'types';
 import s from './styles.module.css';
 
 
@@ -29,8 +34,7 @@ export default function MessageEditor({
   const {
     template: currentTemplate,
     setTemplate,
-    changeHeader,
-    changeFooter,
+    changeBodyText,
     addCondition,
     addVariable,
     setFocus,
@@ -42,12 +46,6 @@ export default function MessageEditor({
     }
   }, [template]);
 
-  const handleSetFocus = (input: HTMLTextAreaElement) => {
-    setFocus({
-      element: input,
-      conditionItemId: '',
-    });
-  }
   const handleSaveTemplate = async () => {
     await callbackSave(currentTemplate);
   }
@@ -72,32 +70,41 @@ export default function MessageEditor({
         <AddConditionButton onClick={addCondition} />
       </div>
 
-      <div className={s.inputContainer}>
-        <TextArea
-          value={currentTemplate.body.startText}
-          onChange={changeHeader}
-          setFocusedElement={handleSetFocus}
-          data-type={TemplateItemType.HEADER}
-        />
-      </div>
+      {currentTemplate.body.map(item => {
+        if (item.type === MessageBodyType.TEXT) {
+          const handleChange = (value: string) => {
+            changeBodyText(item.id, value);
+          }
+          const handleSetFocus = (input: HTMLTextAreaElement) => {
+            setFocus({
+              element: input,
+              conditionItemId: item.id,
+            });
+          }
 
-      {!!currentTemplate.body.condition && (
-        <EditorTemplateCondition
-          parentId={ROOT_PARENT_ID}
-          condition={currentTemplate.body.condition}
-        />
-      )}
+          return (
+            <div className={s.inputContainer} key={item.id}>
+              <TextArea
+                value={(item as MessageText).text}
+                onChange={handleChange}
+                setFocusedElement={handleSetFocus}
+                data-type={TemplateItemType.ROOT}
+              />
+            </div>
+          )
+        }
 
-      {currentTemplate.body.endText !== undefined && (
-        <div className={s.inputContainer}>
-          <TextArea
-            value={currentTemplate.body.endText}
-            onChange={changeFooter}
-            setFocusedElement={handleSetFocus}
-            data-type={TemplateItemType.FOOTER}
-          />
-        </div>
-      )}
+        if (item.type === MessageBodyType.CONDITION) {
+          return (
+            <EditorTemplateCondition
+              key={item.id}
+              parentId={item.id}
+              condition={(item as MessageCondition).condition}
+              isRoot
+            />
+          );
+        }
+      })}
 
       <div className={s.controlButtons}>
         <CustomButton text='Preview' onClick={handleOpenPreview} />

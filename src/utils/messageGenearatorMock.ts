@@ -1,26 +1,40 @@
-import { MessageTemplate } from 'types';
+import { ROOT_PARENT_ID } from 'constants/index';
+import { MessageBodyType, MessageTemplate } from 'types';
 
 export const mockEmptyTemplate: MessageTemplate = {
-  'body': {
-    'id': '68ed75ef-41c3-43dd-a3c3-fd1dff80678e',
-    'startText': '',
-    'condition': null,
-  },
+  'body': [
+    {
+      'id': ROOT_PARENT_ID,
+      'type': MessageBodyType.TEXT,
+      'text': '',
+    }
+  ],
   'conditionList': [],
   'selectedInput': null
 }
 
 export const mockTemplate: MessageTemplate = {
-  'body': {
-    'id': '68ed75ef-41c3-43dd-a3c3-fd1dff80678e',
-    'startText': 'Hello {firstname}!\n\nI just went through your profile and I would love to join your network!',
-    'endText': '\n\nJake\nSoftware Developer\njakelennard911@gmail.com',
-    'condition': {
+  'body': [
+    {
+      'id': ROOT_PARENT_ID,
+      'type': MessageBodyType.TEXT,
+      'text': 'Hello {firstname}!\n\nI just went through your profile and I would love to join your network!',
+    },
+    {
+      'id': '68ed75ef-41c3-43dd-a3c3-fd1dff80678e',
+      'type': MessageBodyType.CONDITION,
+      'condition': {
         'ifId': '6f89cdba-343c-4edf-9f66-50b18deca8a8',
         'thenId': '600a2df9-31e7-421e-8a90-0ce50fc7b0bc',
         'elseId': '68ed75ef-41c3-43dd-a3c3-fd1dff80655e'
+      },
+    },
+    {
+      'id': 'test-body-text',
+      'type': MessageBodyType.TEXT,
+      'text': '\n\nJake\nSoftware Developer\njakelennard911@gmail.com',
     }
-  },
+  ],
   'conditionList': [
       {
           'id': '6f89cdba-343c-4edf-9f66-50b18deca8a8',
@@ -35,7 +49,7 @@ export const mockTemplate: MessageTemplate = {
               'thenId': 'b8312c68-782d-4153-90fa-72b1b819ea78',
               'elseId': '2e7d12b4-7b78-4947-a052-015382f0e396'
           },
-          'endText': ':)'
+          'endText': ':) {test}'
       },
       {
           'id': '68ed75ef-41c3-43dd-a3c3-fd1dff80655e',
@@ -77,7 +91,7 @@ export const mockEmptyVariables = {
 
 export const mockAllVariablesResult = `Hello Bill!
 
-I just went through your profile and I would love to join your network!I know you work at Gates Corp as Co-chair. :)
+I just went through your profile and I would love to join your network!I know you work at Gates Corp as Co-chair. :) {test}
 
 Jake
 Software Developer
@@ -85,7 +99,7 @@ jakelennard911@gmail.com`;
 
 export const mockVariablesWithoutPositionResult = `Hello Bill!
 
-I just went through your profile and I would love to join your network!I know you work at Gates Corp, but what is your role?:)
+I just went through your profile and I would love to join your network!I know you work at Gates Corp, but what is your role?:) {test}
 
 Jake
 Software Developer
